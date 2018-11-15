@@ -9,6 +9,7 @@ import { faMinus,
          faPoll } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 library.add(faMinus, faSignOutAlt, faUserCircle, faCircleNotch, faPoll)
@@ -17,13 +18,27 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 
+// Components
 import Home from './components/Home.vue'
 import SignUpForm from './components/SignUpForm.vue'
 import LoginForm from './components/LoginForm.vue'
 import Logout from './components/Logout.vue'
+import PollList from './components/PollList.vue'
+import PollDetail from './components/PollDetail.vue'
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: Home,
+    children: [
+      {
+        path: 'polls',
+        component: PollList
+      },
+      {
+        path: 'polls/:pollId',
+        component: PollDetail
+      }
+    ]
+  },
   { path: '/signup', component: SignUpForm },
   { path: '/login', component: LoginForm },
   { path: '/logout', component: Logout }
