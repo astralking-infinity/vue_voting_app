@@ -27,21 +27,15 @@ import PollList from './components/PollList.vue'
 import PollDetail from './components/PollDetail.vue'
 
 const routes = [
-  { path: '/', component: Home,
+  { path: '/', component: Home, redirect: { name: 'poll-list'},
     children: [
-      {
-        path: 'polls',
-        component: PollList
-      },
-      {
-        path: 'polls/:pollId',
-        component: PollDetail
-      }
+      { path: 'polls', component: PollList, name: 'poll-list' },
+      { path: 'polls/:pollId', component: PollDetail, name: 'poll-detail' }
     ]
   },
-  { path: '/signup', component: SignUpForm },
-  { path: '/login', component: LoginForm },
-  { path: '/logout', component: Logout }
+  { path: '/signup', component: SignUpForm, name: 'signup' },
+  { path: '/login', component: LoginForm, name: 'login' },
+  { path: '/logout', component: Logout, name: 'logout' }
 ]
 
 const router = new VueRouter({
