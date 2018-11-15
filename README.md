@@ -1,4 +1,4 @@
-# vue_voting_app
+# Vue Voting App
 
 ## Project setup
 ```
