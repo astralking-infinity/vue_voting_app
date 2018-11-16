@@ -45,7 +45,7 @@
       </div>
     </main>
 
-    <footer className="text-center text-light bg-dark py-4"></footer>
+    <footer class="text-center text-light bg-dark py-4"></footer>
   </div>
 </template>
 
