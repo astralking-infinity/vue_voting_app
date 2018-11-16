@@ -15,7 +15,7 @@
               </router-link>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenurouter-link">
                 <router-link class="dropdown-item"
-                             :to="{ name: 'profile', params: { username: user.username } }">
+                             :to="{ name: 'user-polls', params: { username: user.username } }">
                   <font-awesome-icon icon="poll" /> My poll</router-link>
                 <div class="dropdown-divider"></div>
                 <router-link class="dropdown-item" to="/logout">
