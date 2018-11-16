@@ -1,41 +1,66 @@
 <template>
-	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <div class="container">
-      <router-link class="navbar-brand" to="/">Voting App</router-link>
-      <button class="navbar-toggler"type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <div>
+  	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+        <router-link class="navbar-brand" to="/">Voting App</router-link>
+        <button class="navbar-toggler"type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto" v-if="isAuthenticated">
-          <li class="nav-item dropdown">
-            <router-link class="nav-router-link dropdown-toggle" to="#" role="button" id="dropdownMenurouter-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <font-awesome-icon icon="user-circle" /> {user.username}
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto" v-if="isAuthenticated">
+            <li class="nav-item dropdown">
+              <router-link class="nav-link dropdown-toggle" to="" role="button" id="dropdownMenurouter-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <font-awesome-icon icon="user-circle" /> {{ user.username }}
+              </router-link>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenurouter-link">
+                <router-link class="dropdown-item"
+                             :to="{ name: 'profile', params: { username: user.username } }">
+                  <font-awesome-icon icon="poll" /> My poll</router-link>
+                <div class="dropdown-divider"></div>
+                <router-link class="dropdown-item" to="/logout">
+                  <font-awesome-icon icon="sign-out-alt" /> Log out</router-link>
+              </div>
+            </li>
+          </ul>
+          <form class="form-inline ml-auto" v-else>
+            <router-link class="btn btn-outline-secondary "
+                         :to="{ name: 'login', query: { next: getReferrer() } }">
+              Log in
             </router-link>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenurouter-link">
-              <router-link class="dropdown-item" to={`/profile/${user.username}/polls`}>
-                <font-awesome-icon icon="poll" /> My poll</router-link>
-              <div class="dropdown-divider"></div>
-              <router-link class="dropdown-item" to="/logout">
-                <font-awesome-icon icon="sign-out-alt" /> Log out</router-link>
-            </div>
-          </li>
-        </ul>
-        <form class="form-inline ml-auto" v-else>
-          <router-link class="btn btn-outline-secondary " to="/login">
-            Log in
-          </router-link>
-          <router-link class="btn btn-primary ml-2" to="/signup">
-            Sign up
-          </router-link>
-        </form>
+            <router-link class="btn btn-primary ml-2"
+                         :to="{ name: 'signup', query: { next: getReferrer() } }">
+              Sign up
+            </router-link>
+          </form>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+
+    <main class="container">
+      <div class="py-3">
+        <router-view :isAuthenticated="isAuthenticated"
+                     :user="user"
+                     :token="token"></router-view>
+      </div>
+    </main>
+
+    <footer className="text-center text-light bg-dark py-4"></footer>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'Home'
+    name: 'home',
+    props: {
+      isAuthenticated: Boolean,
+      user: Object,
+      token: String
+    },
+    methods: {
+      getReferrer() {
+        return this.$route.fullPath
+      }
+    }
   }
 </script>
