@@ -25,12 +25,14 @@ import LoginForm from './components/LoginForm.vue'
 import Logout from './components/Logout.vue'
 import PollList from './components/PollList.vue'
 import PollDetail from './components/PollDetail.vue'
+import UserPolls from './components/UserPolls.vue'
 
 const routes = [
-  { path: '/', component: Home, redirect: { name: 'poll-list'},
+  { path: '/', component: Home, redirect: { name: 'poll-list'}, name: 'home',
     children: [
       { path: 'polls', component: PollList, name: 'poll-list' },
-      { path: 'polls/:pollId', component: PollDetail, name: 'poll-detail' }
+      { path: 'polls/:pollId', component: PollDetail, name: 'poll-detail' },
+      { path: 'profile/:username/polls', component: UserPolls, name: 'user-polls' }
     ]
   },
   { path: '/signup', component: SignUpForm, name: 'signup' },
