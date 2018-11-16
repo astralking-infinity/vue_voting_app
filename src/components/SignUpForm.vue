@@ -1,8 +1,5 @@
 <template>
-  <span v-if="isAuthenticated">
-    {{ this.$router.push({ name: 'home' }) }}
-  </span>
-  <div class="container" v-else>
+  <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8 col-md-10 col-sm-12 py-3">
         <div class="card">
@@ -17,7 +14,10 @@
                   method="post">
               <div class="alert alert-danger" role="alert"
                    v-if="errors && ('non_field_errors' in errors)">
-                {{ errors.non_field_errors }}
+                <div v-for="(error, idx) in errors.non_field_errors"
+                     :key="idx">
+                  {{ error }}
+                </div>
               </div>
               <div class="form-group">
                 <label for="username">Username:</label>
@@ -112,17 +112,19 @@
 
   export default {
     name: 'signUpForm',
-    props: {
-      isAuthenticated: Boolean,
-      loggedInCallback: Function
-    },
-    data () {
+    data() {
       return {
         username: '',
         email: undefined,
         password1: '',
         password2: '',
         errors: null
+      }
+    },
+    mounted() {
+      const auth  = localStorage.getItem('auth');
+      if (auth) {
+        this.$router.replace({ path: this.$route.query.next || '/' })
       }
     },
     methods: {
@@ -146,8 +148,8 @@
           })
           .then(successData => {
             if ('key' in successData) {
-              // this.loggedInCallback(successData.key)
-              console.log(successData)
+              this.$emit('loggedInCallback', successData.key)
+              this.$router.replace({ path: '/' })
             } else {
               console.log('Something went wrong:')
               console.log(successData);
