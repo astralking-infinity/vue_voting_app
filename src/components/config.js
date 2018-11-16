@@ -5,5 +5,9 @@ export const endpoints = {
   poll_detail:    (pollId)            => `${base_url}/api/polls/${pollId}/`,
   choice_list:    (pollId)            => `${base_url}/api/polls/${pollId}/choices/`,
   vote:           (pollId, choiceId)  => `${base_url}/api/polls/${pollId}/choices/${choiceId}/vote/`,
-  user_poll_list: (username)          => `${base_url}/api/${username}/polls/`
+  user_poll_list: (username)          => `${base_url}/api/${username}/polls/`,
+  registration:   ()                  => `${base_url}/rest-auth/registration/`,
+  login:          ()                  => `${base_url}/rest-auth/login/`,
+  logout:         ()                  => `${base_url}/rest-auth/logout/`,
+  user:           ()                  => `${base_url}/rest-auth/user/`
 }
