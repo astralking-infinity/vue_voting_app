@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="col-lg-8 col-md-6 col-sm-12 py-2">
-        <PollChart :poll="poll" />
+        <PollChart :poll="poll" ref="pollChart" />
       </div>
     </div>
   </div>
@@ -132,7 +132,6 @@
         e.preventDefault()
         const { poll,
                 choiceSelected,
-                voted,
                 isAuthenticated,
                 user,
                 token } = this
@@ -194,6 +193,11 @@
           })
         }
       }
+    },
+    watch: {
+      voted: function () {
+        this.$refs.pollChart.fillData()
+      },
     }
   }
 </script>
