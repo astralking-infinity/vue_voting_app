@@ -1,9 +1,9 @@
 <template>
-  <div>
-  	<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div id="fragment">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <div class="container">
         <router-link class="navbar-brand" to="/">Voting App</router-link>
-        <button class="navbar-toggler"type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
