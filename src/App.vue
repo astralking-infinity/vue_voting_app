@@ -21,10 +21,11 @@
         token: null
       }
     },
-    mounted() {
+    created() {
       const auth  = localStorage.getItem('auth');
       if (auth) {
         const { token } = JSON.parse(auth);
+        this.token = token
         this.loggedIn(token);
       }
     },
