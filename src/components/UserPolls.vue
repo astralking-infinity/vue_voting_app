@@ -52,7 +52,7 @@
               Delete</button>
             <h5 class="">{{ selectedPoll.question }}</h5>
           </div>
-          <PollChart :poll="selectedPoll" ref="pollChart" />
+          <PollChart :poll="selectedPoll" :redraw="true" />
         </div>
         <p v-else class="text-center pt-2">Select a poll to view result</p>
       </section>
@@ -124,13 +124,6 @@
             }
           }
         })
-    },
-    updated() {
-      this.$nextTick(function () {
-        if (this.selectedPoll) {
-          this.selectedOtherPoll
-        }
-      })
     },
     methods: {
       handleCreatePoll(question, choices) {
@@ -250,10 +243,5 @@
         })
       }
     },
-    computed: {
-      selectedOtherPoll: function () {
-        this.$refs.pollChart.fillData()
-      }
-    }
   }
 </script>
