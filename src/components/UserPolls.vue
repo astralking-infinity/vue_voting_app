@@ -12,6 +12,12 @@
   </div>
 
   <div v-else>
+    <NewPollForm v-if="toggleModal"
+                 :user="user"
+                 :token="token"
+                 @closeCallback="handleClosePollModal"
+                 @createPollCallback="handleCreatePoll" />
+
     <div class="container">
       <h1 class="text-center">{{ $route.params.username }}</h1>
     </div>
@@ -56,14 +62,16 @@
 
 <script>
   import PollChart from './PollChart.vue'
+  import NewPollForm from './NewPollForm.vue'
   import { endpoints } from './config.js'
 
   export default {
     name: 'userPolls',
     props: {
+      user: Object,
       token: String
     },
-    components: { PollChart },
+    components: { PollChart, NewPollForm },
     data() {
       return {
         userPolls: null,
@@ -120,11 +128,45 @@
     updated() {
       this.$nextTick(function () {
         if (this.selectedPoll) {
-          this.$refs.pollChart.fillData()
+          this.selectedOtherPoll
         }
       })
     },
     methods: {
+      handleCreatePoll(question, choices) {
+        const { user, token } = this
+
+        // Don't proceed when poll's choices is less than 2
+        if (choices.length - 1 < 2) {
+          alert('Choices must be more than 2.')
+          return null
+        }
+
+        const pollData = { question, created_by: user.pk }
+        const pollConf = {
+          method: 'post',
+          body: JSON.stringify(pollData),
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+          })
+        }
+
+        fetch(endpoints.poll_list(), pollConf)
+          .then(response => {
+            if (!response.ok) {
+              throw response.json()
+            }
+            return response.json()
+          })
+          .then(poll => {
+            this.postPollChoices(token, poll, choices)
+            this.handleClosePollModal()
+          })
+          .catch(errorData => {
+            errorData.then(errors => this.setState({ errors }))
+          })
+      },
       handleDeletePoll(poll) {
         var ret = window.confirm('Are you sure you want to deleted this?')
         if (!ret) return null
@@ -154,6 +196,63 @@
       },
       handleClosePollModal() {
         this.toggleModal = false
+      },
+      postPollChoices(token, poll, choices) {
+        const { userPolls } = this
+        const choiceEndpoint = `http://127.0.0.1:8000/api/polls/${poll.id}/choices/`
+
+        choices.forEach((choiceItem) => {
+          if (choiceItem.choice_text) {
+            const choice = {
+              poll: poll.id,
+              choice_text: choiceItem.choice_text
+            }
+
+            const choiceConf = {
+              method: 'post',
+              body: JSON.stringify(choice),
+              headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+              })
+            }
+
+            fetch(endpoints.choice_list(poll.id), choiceConf)
+              .then(response => {
+                if (!response.ok) {
+                  throw response.json()
+                }
+                return response.json()
+              })
+              .then(choiceData => {
+                var found = false
+                userPolls.forEach((pollItem) => {
+                  if (pollItem.id === poll.id) {
+                    pollItem.choices.push(choiceData)
+                    found = true
+                  }
+                })
+                if (!found) {
+                  userPolls.reverse()  // Need to change this so new poll will be added at the beginning of the list.
+                  userPolls.push(poll)
+                  userPolls.reverse()
+                }
+                this.userPolls = userPolls
+              })
+              .catch(errorData => {
+                if (errorData instanceof Promise) {
+                  errorData.then(errors => this.errors = errors)
+                } else {
+                  this.placeholder = errorData.message
+                }
+              })
+          }
+        })
+      }
+    },
+    computed: {
+      selectedOtherPoll: function () {
+        this.$refs.pollChart.fillData()
       }
     }
   }
