@@ -9,7 +9,7 @@ const defaultOptions = {
     easing: 'linear'
   },
   legend: {
-    position: 'bottom'
+    display: false
   }
 }
 
@@ -17,6 +17,7 @@ export default {
   extends: Doughnut,
   mixins: [reactiveProp],
   props: {
+    redraw: Boolean,
     options: Object
   },
   mounted() {
@@ -40,6 +41,19 @@ export default {
         }
       }
     })
-    this.renderChart(this.chartData, this.options || defaultOptions)
+    this.renderDoughnutChart()
+  },
+  methods: {
+    renderDoughnutChart: function () {
+      this.renderChart(this.chartData, this.options || defaultOptions)
+    }
+  },
+  watch: {
+    chartData: function () {
+      if (this.redraw) {
+        this.$data._chart.destroy()
+        this.renderDoughnutChart()
+      }
+    }
   }
 }
