@@ -39,9 +39,7 @@
 
     <main class="container">
       <div class="py-3">
-        <router-view :isAuthenticated="isAuthenticated"
-                     :user="user"
-                     :token="token"></router-view>
+        <router-view></router-view>
       </div>
     </main>
 
@@ -50,17 +48,17 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'home',
-    props: {
-      isAuthenticated: Boolean,
-      user: Object,
-      token: String
-    },
     methods: {
       getReferrer() {
         return this.$route.fullPath
       }
+    },
+    computed: {
+      ...mapGetters(['isAuthenticated', 'user'])
     }
   }
 </script>

@@ -75,16 +75,13 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   import PollChart from './PollChart.vue'
   import { endpoints } from './config.js'
 
   export default {
     name: 'pollDetail',
-    props: {
-      isAuthenticated: Boolean,
-      user: Object,
-      token: String
-    },
     components: { PollChart },
     data() {
       return {
@@ -178,6 +175,7 @@
       }
     },
     computed: {
+      ...mapGetters(['isAuthenticated', 'user', 'token']),
       checkUserHasVoted: function () {
         if (this.isAuthenticated) {
           const { poll, user } = this
@@ -189,9 +187,11 @@
                 hasVoted: true,
                 choice: choice
               }
+              return true
             }
           })
         }
+        return false
       }
     },
     watch: {

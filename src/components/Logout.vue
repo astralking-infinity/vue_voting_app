@@ -5,14 +5,11 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import { endpoints } from './config.js'
 
   export default {
     name: 'logout',
-    props: {
-      isAuthenticated: Boolean,
-      token: String
-    },
     mounted() {
       const { isAuthenticated, token } = this
       if (isAuthenticated) {
@@ -30,8 +27,8 @@
             }
             return response.json()
           })
-          .then(successData => {
-            this.$emit('loggedOutCallback')
+          .then(() => {
+            this.$store.dispatch('loggedOut')
             this.$router.replace({ name: 'home' })
           })
           .catch(errorData => {
@@ -42,6 +39,9 @@
             }
           })
       }
+    },
+    computed: {
+      ...mapGetters(['isAuthenticated', 'token'])
     }
   }
 </script>

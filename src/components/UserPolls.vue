@@ -13,8 +13,6 @@
 
   <div v-else>
     <NewPollForm v-if="toggleModal"
-                 :user="user"
-                 :token="token"
                  @closeCallback="handleClosePollModal"
                  @createPollCallback="handleCreatePoll" />
 
@@ -61,16 +59,14 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   import PollChart from './PollChart.vue'
   import NewPollForm from './NewPollForm.vue'
   import { endpoints } from './config.js'
 
   export default {
     name: 'userPolls',
-    props: {
-      user: Object,
-      token: String
-    },
     components: { PollChart, NewPollForm },
     data() {
       return {
@@ -84,7 +80,7 @@
     },
     created() {
       if (!this.token) {
-        this.$router.push({ name: 'login' })
+        this.$router.push({ name: 'home' })
       }
     },
     mounted() {
@@ -192,7 +188,6 @@
       },
       postPollChoices(token, poll, choices) {
         const { userPolls } = this
-        const choiceEndpoint = `http://127.0.0.1:8000/api/polls/${poll.id}/choices/`
 
         choices.forEach((choiceItem) => {
           if (choiceItem.choice_text) {
@@ -243,5 +238,8 @@
         })
       }
     },
+    computed: {
+      ...mapGetters(['user', 'token'])
+    }
   }
 </script>

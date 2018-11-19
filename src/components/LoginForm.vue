@@ -109,7 +109,7 @@
           })
           .then(successData => {
             if ('key' in successData) {
-              this.$emit('loggedInCallback', successData.key)
+              this.$store.dispatch('loggedIn', { token: successData.key })
               this.$router.replace({ path: this.$route.query.next || '/' })
             } else {
               console.log('Something went wrong:')
