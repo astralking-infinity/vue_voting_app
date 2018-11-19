@@ -1,14 +1,19 @@
 <template>
   <div v-if="!isLoaded" class="text-center">
     <div v-if="errors && ('detail' in errors)">
-      <div v-for="(error, idx) in errors.detail"
-          :key="idx">
-        {{ error }}
+      <div v-if="!Array.isArray(errors.detail)">
+        {{ errors.detail }}
+      </div>
+      <div v-else>
+        <div v-for="(error, idx) in errors.detail"
+            :key="idx">
+          {{ error }}
+        </div>
       </div>
     </div>
-    <span v-else>{{ placeholder }}
+    <div v-else>{{ placeholder }}
       <font-awesome-icon icon="circle-notch"></font-awesome-icon>
-    </span>
+    </div>
   </div>
 
   <div v-else>
