@@ -84,44 +84,47 @@
       }
     },
     mounted() {
-      const { token } = this
-      const { username } = this.$route.params
-
-      if (!this.token) {
-        return null
-      }
-
-      const conf = {
-        method: 'get',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`
-        })
-      }
-
-      fetch(endpoints.user_poll_list(username), conf)
-        .then(response => {
-          if (!response.ok) {
-            throw response.json()
-          }
-          return response.json()
-        })
-        .then(userPolls => {
-          this.userPolls = userPolls
-          this.isLoaded = true
-        })
-        .catch(errorData => {
-          if (errorData instanceof Promise) {
-            errorData.then(errors => {
-              this.errors = errors })
-          } else {
-            this.errors = {
-                detail: [errorData.message]
-            }
-          }
-        })
+      this.getUserPollList(this.$route.params.username)
     },
     methods: {
+      getUserPollList(username) {
+        const { token } = this
+
+        if (!this.token) {
+          return null
+        }
+
+        const conf = {
+          method: 'get',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+          })
+        }
+
+        fetch(endpoints.user_poll_list(username), conf)
+          .then(response => {
+            if (!response.ok) {
+              throw response.json()
+            }
+            return response.json()
+          })
+          .then(userPolls => {
+            this.userPolls = userPolls
+            this.isLoaded = true
+          })
+          .catch(errorData => {
+            if (errorData instanceof Promise) {
+              errorData.then(errors => {
+                this.errors = errors
+              })
+            } else {
+              this.errors = {
+                detail: [errorData.message]
+              }
+            }
+          })
+      },
       handleCreatePoll(question, choices) {
         const { user, token } = this
 
@@ -240,6 +243,10 @@
     },
     computed: {
       ...mapGetters(['user', 'token'])
+    },
+    beforeRouteUpdate(to, from, next) {
+      this.getUserPollList(to.params.username)
+      next()
     }
   }
 </script>
