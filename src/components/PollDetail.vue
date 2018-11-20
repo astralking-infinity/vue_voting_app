@@ -185,18 +185,11 @@
       checkUserHasVoted: function () {
         if (this.isAuthenticated) {
           const { poll, user } = this
-          poll.choices.forEach(choice => {
-            const voted = choice.votes.find(vote => user && vote.voted_by == user.pk)
-            // console.log(voted)  // Needs some handling for guest votes also
-            if (voted) {
-              return {
-                hasVoted: true,
-                choice: choice
-              }
-            }
+          const userChoice = poll.choices.find(choice => {
+            return choice.votes.find(vote => user && vote.voted_by == user.pk)
           })
+          return userChoice ? { hasVoted: true, choice: userChoice } : null
         }
-        return false
       }
     }
   }
