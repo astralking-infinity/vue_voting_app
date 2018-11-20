@@ -73,7 +73,7 @@
         </div>
       </div>
       <div class="col-lg-8 col-md-6 col-sm-12 py-2">
-        <PollChart :poll="poll" ref="pollChart" />
+        <PollChart :poll="poll" />
       </div>
     </div>
   </div>
@@ -126,17 +126,18 @@
     },
     updated() {
       this.$nextTick(function () {
-        this.checkUserHasVoted
+        if (this.checkUserHasVoted)
+          this.voted = this.checkUserHasVoted
       })
     },
     methods: {
       handleSubmitVote(e) {
         e.preventDefault()
-        const { poll,
-                choiceSelected,
+        const { choiceSelected,
                 isAuthenticated,
                 user,
                 token } = this
+        const poll = {...this.poll}
 
         if (!choiceSelected) {
           alert('Please select an item you want to vote from the list.')
@@ -188,21 +189,15 @@
             const voted = choice.votes.find(vote => user && vote.voted_by == user.pk)
             // console.log(voted)  // Needs some handling for guest votes also
             if (voted) {
-              this.voted = {
+              return {
                 hasVoted: true,
                 choice: choice
               }
-              return true
             }
           })
         }
         return false
       }
-    },
-    watch: {
-      voted: function () {
-        this.$refs.pollChart.fillData()
-      },
     }
   }
 </script>
