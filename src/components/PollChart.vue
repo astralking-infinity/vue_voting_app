@@ -36,7 +36,7 @@
     updated() {
       this.$nextTick(function () {
         if (this.loaded) {
-          this.setLegend
+          this.legendMarkup = this.$refs.chart.generateLegend()
         }
       })
     },
@@ -57,11 +57,6 @@
           }]
         }
         this.loaded = true
-      }
-    },
-    computed: {
-      setLegend: function () {
-        this.legendMarkup = this.$refs.chart.generateLegend()
       }
     },
     watch: {
