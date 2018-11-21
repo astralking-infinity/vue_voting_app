@@ -1,4 +1,5 @@
 # Vue Voting App
+VueJS-based frontend for Voting App
 
 ## Project setup
 ```
